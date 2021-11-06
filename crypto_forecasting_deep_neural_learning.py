@@ -1,12 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Nov  6 16:23:26 2021
-
-@author: jordicorbilla
-"""
+# Copyright 2021 Jordi Corbilla. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
 
 import pandas as pd
+import os
+import secrets
+from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
+from stock_prediction_plotter import Plotter
 import numpy as np
 
 TIME_STEPS = 3
@@ -33,6 +46,7 @@ train_btc = train_df[train_df['Asset_ID'] == 1]
 del train_btc['Asset_ID']
 print(train_btc.head(3))
 
+# 70% of the data for training, the rest for validation
 training_data = train_btc[:int(train_btc.shape[0]*0.7)].copy()
 test_data = train_btc[int(train_btc.shape[0]*0.7):].copy()
 print(training_data.head(3))
@@ -76,3 +90,13 @@ x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 print(x_train)
 print(y_train)
 
+STOCK_TICKER = 'BTC'
+TODAY_RUN = datetime.today().strftime("%Y%m%d")
+TOKEN = STOCK_TICKER + '_' + TODAY_RUN + '_' + secrets.token_hex(16)
+PROJECT_FOLDER = os.path.join(os.getcwd(), TOKEN)
+
+if not os.path.exists(PROJECT_FOLDER):
+    os.makedirs(PROJECT_FOLDER)
+        
+plotter = Plotter(True, PROJECT_FOLDER, STOCK_TICKER, STOCK_TICKER, STOCK_TICKER)
+plotter.plot_histogram_data_split(training_data, test_data, 70)

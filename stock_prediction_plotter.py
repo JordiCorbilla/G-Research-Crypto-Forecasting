@@ -24,14 +24,14 @@ class Plotter:
         self.currency = currency
         self.stock_ticker = stock_ticker
 
-    def plot_histogram_data_split(self, training_data, test_data, validation_date):
+    def plot_histogram_data_split(self, training_data, test_data, validation_data):
         print("plotting Data and Histogram")
         plt.figure(figsize=(12, 5))
         plt.plot(training_data.Close, color='green')
         plt.plot(test_data.Close, color='red')
         plt.ylabel('Price [' + self.currency + ']')
         plt.xlabel("Date")
-        plt.legend(["Training Data", "Validation Data >= " + validation_date.strftime("%Y-%m-%d")])
+        plt.legend(["Training Data", "Validation Data >= " + str(validation_data) + "%"])
         plt.title(self.short_name)
         plt.savefig(os.path.join(self.project_folder, self.short_name.strip().replace('.', '') + '_price.png'))
 
