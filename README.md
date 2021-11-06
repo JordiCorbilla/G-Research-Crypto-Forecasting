@@ -1,7 +1,8 @@
 # G-Research-Crypto-Forecasting
-G-Research Crypto-Forecasting Competition
 
-## Asset Details
+G-Research Crypto-Forecasting Competition. Use your machine learning expertise to forecast short term returns in 14 popular cryptocurrencies.
+
+## Asset Details (14)
 
 | Asset_Id | Weight             | Asset_Name       |
 |----------|--------------------|------------------|
