@@ -20,6 +20,7 @@ import secrets
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 from stock_prediction_plotter import Plotter
+from stock_prediction_lstm import LongShortTermMemory
 import numpy as np
 
 TIME_STEPS = 3
@@ -100,3 +101,16 @@ if not os.path.exists(PROJECT_FOLDER):
         
 plotter = Plotter(True, PROJECT_FOLDER, STOCK_TICKER, STOCK_TICKER, STOCK_TICKER)
 plotter.plot_histogram_data_split(training_data, test_data, 70)
+
+# Train the model
+EPOCHS = 100
+BATCH_SIZE = 32
+lstm = LongShortTermMemory(PROJECT_FOLDER)
+model = lstm.create_model(x_train)
+model.compile(optimizer='adam', loss='mean_squared_error', metrics=lstm.get_defined_metrics())
+history = model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(x_test, y_test),
+                    callbacks=[lstm.get_callback()])
+print("saving weights")
+model.save(os.path.join(PROJECT_FOLDER, 'model_weights.h5'))
+plotter.plot_loss(history)
+plotter.plot_mse(history)
